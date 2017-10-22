@@ -14,4 +14,3 @@ Your choice.
 
 Let me know if this is something you're interested in.
 
-Please see the `.pdf` for technical/math details.
