@@ -1,10 +1,8 @@
 # Extreme low bit rate vocoder
 
-This code is from a 2012 hackathon, and it REQUIRES  R2012a <= Matlab < R2021a for DSP Toolbox for Cepstral coefficients to LPC conversion.
-Such methods are commonly known and may even be around in Octave/Python code.
+This code is from a 2012 hackathon.
+We have upgraded the code to work on any Matlab with Signal Processing Toolbox.
 
-Much of the code is Octave compatible.
-
-For performance and general usability, further work should probably be in porting to Python.
+Formerly, the code used obsolete DSP Toolbox objects for LPC to Cepstral coefficient conversion and back.
 
 `Main.m` is the only program to run.
