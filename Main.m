@@ -1,13 +1,25 @@
 % Michael Hirsch 2011
 function  AudioCepProc = Main()
+
+dataFile = tempname; % shared for plotting while isolating namespace
+
 %% (1a) Load waveform and parameters, and LPF waveform
 pm = setParams();
+
+transmit(dataFile, pm)
+
+receive(dataFile)
+
+end
+
+
+function transmit(dataFile, pm)
 [pm, data] = getSound(pm); %also LPF's and VOX detection
 %% (1b) Apply window to data, so we can work with short-time sections
 % window data
 [data.xWind,data.xFrame,data.nFrames,data.window] = ...
         windowData(data.FiltSound, pm.WinL, pm.FrameL,pm.WinType);
-%% (1c) Filterbank of filtered input waveform 
+%% (1c) Filterbank of filtered input waveform
 % Could be used to attenuate frequency bands with small amplitudes, that
 % are not important to vocal tract resonances, or for a "spectrogram" type
 % display
@@ -45,15 +57,12 @@ file = transmitter3(TractPoles,TractG,FFerr,...
 fileCeps = transmitterCeps(LPCcep,...
     fundExcite,data.nFrames,pm.WinL,pm.FrameL,data.Ns,data.Fs,pm.KeepLPCceps,pm.p,pm.glottMode);
 end
-save('AllVariables.mat') % used when plotting
-%======================================
-clear % clear entire Matlab memory    |
-%======================================
-% end of transmitter
-%===========================================================
-% lossless channel
-%===========================================================
-% Receiver Section
+save(dataFile) % used when plotting
+
+end
+
+
+function receive(dataFile)
 %% regenerate speech via glottal excitation
 ProcType = 'keps';
 switch ProcType
@@ -64,10 +73,10 @@ switch ProcType
 [TractPoles,TractG,LPCcep,fundExcite,FFerr,Ns,Fs,FrameL,WinL,nFrames,glottMode] = ...
     receiverCeps('transmitCeps.mat');
 end
-        
+
 [xSynth, xSynthW, Excite] = regenerateSignalFromLPCcoeff(...
     TractG,TractPoles,fundExcite,FFerr,Ns,Fs,FrameL,WinL,nFrames,glottMode,25,'receiver',false);
 
 
-MyPlot('AllVariables.mat',xSynth,xSynthW,Excite,TractPoles,TractG)
+MyPlot(dataFile,xSynth,xSynthW,Excite,TractPoles,TractG)
 end
