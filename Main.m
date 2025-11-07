@@ -1,19 +1,22 @@
 % Michael Hirsch 2011
 function  AudioCepProc = Main()
 
-dataFile = tempname; % shared for plotting while isolating namespace
+plotFile = tempname; % shared for plotting while isolating namespace
+transmitFile = tempname;
 
 %% (1a) Load waveform and parameters, and LPF waveform
 pm = setParams();
 
-transmit(dataFile, pm)
+transmit(plotFile, transmitFile, pm)
 
-receive(dataFile)
+[xSynth, xSynthW, Excite, TractPoles, TractG] = receive(transmitFile);
+
+MyPlot(plotFile,xSynth,xSynthW,Excite,TractPoles,TractG)
 
 end
 
 
-function transmit(dataFile, pm)
+function transmit(plotFile, transmitFile, pm)
 [pm, data] = getSound(pm); %also LPF's and VOX detection
 %% (1b) Apply window to data, so we can work with short-time sections
 % window data
@@ -50,33 +53,25 @@ figure, imagesc(Ceps2D),title('Cepstrogram')
 %% "transmit" data by saving to disk
 ProcType = 'keps';
 switch ProcType
-    case 'LPC'
-file = transmitter3(TractPoles,TractG,FFerr,...
-    fundExcite,data.nFrames,pm.WinL,pm.FrameL,data.Ns,data.Fs,pm.p,pm.glottMode);
-    case 'keps'
-fileCeps = transmitterCeps(LPCcep,...
-    fundExcite,data.nFrames,pm.WinL,pm.FrameL,data.Ns,data.Fs,pm.KeepLPCceps,pm.p,pm.glottMode);
+  case 'LPC', transmitter3(transmitFile, TractPoles,TractG,FFerr, fundExcite,data.nFrames,pm.WinL,pm.FrameL,data.Ns,data.Fs,pm.p,pm.glottMode);
+  case 'keps', transmitterCeps(transmitFile, LPCcep, fundExcite,data.nFrames,pm.WinL,pm.FrameL,data.Ns,data.Fs,pm.KeepLPCceps,pm.p,pm.glottMode);
 end
-save(dataFile) % used when plotting
+
+save(plotFile)
+% used for plotting only
 
 end
 
 
-function receive(dataFile)
+function [xSynth, xSynthW, Excite, TractPoles, TractG] = receive(transmitFile)
 %% regenerate speech via glottal excitation
 ProcType = 'keps';
 switch ProcType
-    case 'LPC'
-[TractPoles,TractG,fundExcite,FFerr,Ns,Fs,FrameL,WinL,nFrames,glottMode] = ...
-    receiver3('transmit.mat');
-    case 'keps'
-[TractPoles,TractG,LPCcep,fundExcite,FFerr,Ns,Fs,FrameL,WinL,nFrames,glottMode] = ...
-    receiverCeps('transmitCeps.mat');
+  case 'LPC', [TractPoles,TractG,fundExcite,FFerr,Ns,Fs,FrameL,WinL,nFrames,glottMode] = receiver3(transmitFile);
+  case 'keps', [TractPoles,TractG,LPCcep,fundExcite,FFerr,Ns,Fs,FrameL,WinL,nFrames,glottMode] = receiverCeps(transmitFile);
 end
 
 [xSynth, xSynthW, Excite] = regenerateSignalFromLPCcoeff(...
     TractG,TractPoles,fundExcite,FFerr,Ns,Fs,FrameL,WinL,nFrames,glottMode,25,'receiver',false);
 
-
-MyPlot(dataFile,xSynth,xSynthW,Excite,TractPoles,TractG)
 end

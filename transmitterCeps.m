@@ -1,18 +1,17 @@
-function file = transmitterCeps(LPCcep,...
-    fundExcite,nFrames,WinL,FrameL,Ns,Fs,KeepCeps,p,glottMode) 
+function transmitterCeps(transmitFile, LPCcep,fundExcite,nFrames,WinL,FrameL,Ns,Fs,KeepCeps,p,glottMode)
 %% convert to integers for data size reduction
 fMode = '2bit';%'3bit';%'4bit';%'8bit';%'double';%'4bit';
 
 fid(1) = fopen('LPCcep.dat','w+');
 sc.Cep = 1/max(max(LPCcep));
 fid(2) = fopen('fExcite.dat','w+');
-sc.MeanFund = mean(fundExcite(~isnan(fundExcite))); 
+sc.MeanFund = mean(fundExcite(~isnan(fundExcite)));
 sc.fund = 1./max(fundExcite-sc.MeanFund);
 switch fMode
     case 'double'
         fwrite(fid(1),LPCcep(1:KeepCeps,:),'double'); %float
         fwrite(fid(2),fundExcite,'double');
-      
+
     case '8bit'
 LPCcep = uint8(LPCcep(1:KeepCeps,:) * 127*sc.Cep);
 fwrite(fid(1),LPCcep,'int8');
@@ -41,9 +40,7 @@ end
 
 fclose('all');
 
-file = 'transmitCeps.mat';
-save(file,'nFrames','WinL','FrameL','Ns','Fs','glottMode','sc','KeepCeps','p')
-clear LPCcep  fundExcite fid fMode 
+save(transmitFile,'nFrames','WinL','FrameL','Ns','Fs','glottMode','sc','KeepCeps','p')
 %% get filesize info
 
 LPCcepS = dir([pwd '/LPCcep.dat']); LPCcepS = LPCcepS.bytes;
@@ -58,4 +55,5 @@ disp(['Transmitted at: ',num2str((LPCcepS+fundExciteS)/(Ns/Fs)*8),' bits per sec
 disp('Consisting of: ')
 disp([int2str(LPCcepS),' bytes for Cepstral LPC model coeff. (short-time segments),'])
 disp([int2str(fundExciteS),' bytes for Glottal Excitation'])
-end %function
+
+end
