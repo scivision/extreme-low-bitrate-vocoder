@@ -2,14 +2,15 @@
 function  AudioCepProc = Main()
 
 plotFile = tempname; % shared for plotting while isolating namespace
-transmitFile = tempname;
-
+paramFile = tempname;
+lpcFile = tempname;
+exciteFile = tempname;
 %% (1a) Load waveform and parameters, and LPF waveform
 pm = setParams();
 
-transmit(plotFile, transmitFile, pm)
+transmit(plotFile, paramFile, pm, lpcFile, exciteFile)
 
-[xSynth, xSynthW, Excite, TractPoles, TractG] = receive(transmitFile);
+[xSynth, xSynthW, Excite, TractPoles, TractG] = receive(paramFile, lpcFile, exciteFile);
 
 MyPlot(plotFile,xSynth,xSynthW,Excite,TractPoles,TractG)
 

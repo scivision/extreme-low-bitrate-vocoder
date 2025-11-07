@@ -1,10 +1,10 @@
-function transmitterCeps(transmitFile, LPCcep,fundExcite,nFrames,WinL,FrameL,Ns,Fs,KeepCeps,p,glottMode)
+function transmitterCeps(transmitFile, LPCcep,fundExcite,nFrames,WinL,FrameL,Ns,Fs,KeepCeps,p,glottMode, lpcFile, exciteFile)
 %% convert to integers for data size reduction
 fMode = '2bit';%'3bit';%'4bit';%'8bit';%'double';%'4bit';
 
-fid(1) = fopen('LPCcep.dat','w+');
+fid(1) = fopen(lpcFile,'w+');
 sc.Cep = 1/max(max(LPCcep));
-fid(2) = fopen('fExcite.dat','w+');
+fid(2) = fopen(exciteFile,'w+');
 sc.MeanFund = mean(fundExcite(~isnan(fundExcite)));
 sc.fund = 1./max(fundExcite-sc.MeanFund);
 switch fMode
@@ -43,8 +43,8 @@ fclose('all');
 save(transmitFile,'nFrames','WinL','FrameL','Ns','Fs','glottMode','sc','KeepCeps','p')
 %% get filesize info
 
-LPCcepS = dir([pwd '/LPCcep.dat']); LPCcepS = LPCcepS.bytes;
-fundExciteS = dir([pwd '/fExcite.dat']);  fundExciteS= fundExciteS.bytes;
+LPCcepS = dir(lpcFile); LPCcepS = LPCcepS.bytes;
+fundExciteS = dir(exciteFile);  fundExciteS= fundExciteS.bytes;
 
 total = whos; tot = 0;
 for i = 1:length(total)

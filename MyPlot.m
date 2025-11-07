@@ -2,11 +2,12 @@ function MyPlot(file,xSynth,xSynthW,Excite,TractPoles,TractG,formantFreqs)
 load(file)
 SI = pm.SnapInd; plotEn = pm.pe;
 %MyPlot(tOrig,MySound,MyCeps,Ceps2D,pm,Ceps)
-fT = figure('pos',[70 50 800 820]);
+figure('pos',[70 50 800 820])
 axT(1) = subplot(3,1,1);
 plot(axT(1),data.tOrig, data.Sound)
 title(axT(1),['Time-domain waveform: ',pm.file])
-ylabel(axT(1),'Relative Amplitude'),xlabel(axT(1),'time [sec]')
+ylabel(axT(1),'Relative Amplitude')
+xlabel(axT(1),'time [sec]')
 set(axT(1),'ylim',[-1 1])
 
 % if plotEn(2)
@@ -26,7 +27,7 @@ set(axT(3),'ylim',[-1 1])
 
 
 %% nice plot
-figure('pos',[70 50 800 820],'name','Spectral Analysis')
+figure('pos',[70 50 800 820], Name='Spectral Analysis')
 X = 20*log10(abs(fft(data.xFrame(:,SI))));
 
 nfft = fix(length(X)/2);
@@ -61,7 +62,7 @@ set(gca,'ylim',[-40 40])
 
 if length(Excite)>1
 %%glottal excitation
-figure('pos',[70 50 520 460],'name','glottal excitation')
+figure('pos',[70 50 520 460], Name='glottal excitation')
 stem(data.tOrig(1:pm.WinL),Excite)
 title('glottal excitation')
 xlabel('time [sec]'),ylabel('amplitude [dimensionless]')
@@ -78,16 +79,20 @@ title(['FIR filtered Time-domain input spectrum: ',pm.file])
 end
 if plotEn(4)
    fCG= figure; axCepg = axes('parent',fCG);
-imagesc(abs(log(data.Ceps2D))), set(axCepg,'ydir','normal')
-ylabel(axCepg,'Quefrency [samples]'),xlabel(axCepg,'frame #')
-title('Cepstrogram (real)');
+imagesc(abs(log(data.Ceps2D)))
+set(axCepg,'ydir','normal')
+ylabel(axCepg,'Quefrency [samples]')
+xlabel(axCepg,'frame #')
+title('Cepstrogram (real)')
 end
 
 if plotEn(5)
 figure
 axCep = subplot(3,1,1);
 plot(axCep,MyCeps(1:pm.tSind))
-xlabel('Sample #'),ylabel('Cepstral Value'),title('Overall Cepstrum (real)')
+xlabel('Sample #')
+ylabel('Cepstral Value')
+title('Overall Cepstrum (real)')
 
 Qlim = pm.CepsOrder;
 axS(1) = subplot(3,1,2);

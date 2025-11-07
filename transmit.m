@@ -1,4 +1,4 @@
-function transmit(plotFile, transmitFile, pm)
+function transmit(plotFile, transmitFile, pm, lpcFile, exciteFile)
 [pm, data] = getSound(pm); %also LPF's and VOX detection
 %% (1b) Apply window to data, so we can work with short-time sections
 % window data
@@ -36,7 +36,7 @@ figure, imagesc(Ceps2D),title('Cepstrogram')
 ProcType = 'keps';
 switch ProcType
   case 'LPC', transmitter3(transmitFile, TractPoles,TractG,FFerr, fundExcite,data.nFrames,pm.WinL,pm.FrameL,data.Ns,data.Fs,pm.p,pm.glottMode);
-  case 'keps', transmitterCeps(transmitFile, LPCcep, fundExcite,data.nFrames,pm.WinL,pm.FrameL,data.Ns,data.Fs,pm.KeepLPCceps,pm.p,pm.glottMode);
+  case 'keps', transmitterCeps(transmitFile, LPCcep, fundExcite, data.nFrames, pm.WinL, pm.FrameL, data.Ns, data.Fs, pm.KeepLPCceps, pm.p, pm.glottMode, lpcFile, exciteFile);
 end
 
 save(plotFile)
