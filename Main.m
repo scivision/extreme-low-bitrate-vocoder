@@ -1,6 +1,5 @@
 % Michael Hirsch 2011
 function  AudioCepProc = Main()
-assert(verLessThan('matlab', '9.10'), "dsp LPCToCepstral was removed in R2021a with no replacement")
 %% (1a) Load waveform and parameters, and LPF waveform
 pm = setParams();
 [pm, data] = getSound(pm); %also LPF's and VOX detection

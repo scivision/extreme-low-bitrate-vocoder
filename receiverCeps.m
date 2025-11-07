@@ -35,15 +35,14 @@ end
 %% put cepstral coeffs back to LPC coeffs
 LPCcep(end+1:p,:) = 0;
 for i = 1:nFrames
-hcc2lpc=dsp.CepstralToLPC;
-    TractPoles(:,i) = step(hcc2lpc,LPCcep(:,i));
+    TractPoles(:,i) = cepstral2lpc(LPCcep(:,i));
 end
 TractG = ones(1,nFrames); %saved space by not sending gains
 %% nans
 fundExcite(fundExcite == 0) = nan;
 
 nFrames = double(nFrames); WinL = double(WinL); FrameL = double(FrameL);
-Ns = double(Ns); Fs = double(Fs); 
+Ns = double(Ns); Fs = double(Fs);
 
 fileInfo = dir([pwd '\' file]);
 %display(['Loaded voice file size: ',int2str(fileInfo.bytes),' bytes'])
