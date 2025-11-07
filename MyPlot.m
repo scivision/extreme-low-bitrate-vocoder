@@ -1,11 +1,14 @@
 function MyPlot(file,xSynth,xSynthW,Excite,TractPoles,TractG,formantFreqs)
-load(file)
-SI = pm.SnapInd; plotEn = pm.pe;
+
+p = load(file);
+SI = p.pm.SnapInd;
+plotEn = p.pm.plotEn;
+data = p.data;
 %MyPlot(tOrig,MySound,MyCeps,Ceps2D,pm,Ceps)
-fT = figure('pos',[70 50 800 820]);
+figure('pos',[70 50 800 820])
 axT(1) = subplot(3,1,1);
-plot(axT(1),data.tOrig, data.Sound)
-title(axT(1),['Time-domain waveform: ',pm.file])
+plot(axT(1), data.tOrig, data.Sound)
+title(axT(1),['Time-domain waveform: ', p.pm.file])
 ylabel(axT(1),'Relative Amplitude'),xlabel(axT(1),'time [sec]')
 set(axT(1),'ylim',[-1 1])
 
@@ -17,9 +20,9 @@ set(axT(1),'ylim',[-1 1])
 % set(axT(2),'ylim',[-1 1])
 % end
 
-axT(3)=subplot(3,1,3);
+axT(3) = subplot(3,1,3);
 plot(axT(3),data.tOrig, xSynth)
-title(axT(3),['Time-domain Synthesized LPC output: ',pm.file])
+title(axT(3),['Time-domain Synthesized LPC output: ', p.pm.file])
 ylabel(axT(3),'Relative Amplitude'),xlabel(axT(3),'time [sec]')
 set(axT(3),'ylim',[-1 1])
 
@@ -55,14 +58,14 @@ end
 plot(freq,SYNTH(1:nfft),'b','Displayname','Synth. VOICED Spect.')
 
 legend('show')
-title(['Original spectrum at ',num2str(SI*pm.WinL/2/data.Fs),' sec. vs. LPC model.  File: ',file])
+title(['Original spectrum at ',num2str(SI* p.pm.WinL/2/data.Fs),' sec. vs. LPC model.  File: ',file])
 xlabel('Frequency [Hz]'),ylabel('20*log10|X|')
 set(gca,'ylim',[-40 40])
 
 if length(Excite)>1
 %%glottal excitation
 figure('pos',[70 50 520 460],'name','glottal excitation')
-stem(data.tOrig(1:pm.WinL),Excite)
+stem(data.tOrig(1:p.pm.WinL),Excite)
 title('glottal excitation')
 xlabel('time [sec]'),ylabel('amplitude [dimensionless]')
 end
@@ -70,33 +73,38 @@ end
 if plotEn(3)
 figure
 imagesc(data.tOrig,data.fAx,10*log10(abs(data.Pxx)))
-set(gca,'Clim',[-100 -10])
+clim([-100 -10])
 axis xy
-xlabel('Time [sec]'),ylabel('Frequency [Hz]')
-title(['FIR filtered Time-domain input spectrum: ',pm.file])
+xlabel('Time [sec]')
+ylabel('Frequency [Hz]')
+title(['FIR filtered Time-domain input spectrum: ', p.pm.file])
 %surf(10*log10(abs(Pxx)))
 end
 if plotEn(4)
    fCG= figure; axCepg = axes('parent',fCG);
-imagesc(abs(log(data.Ceps2D))), set(axCepg,'ydir','normal')
-ylabel(axCepg,'Quefrency [samples]'),xlabel(axCepg,'frame #')
-title('Cepstrogram (real)');
+imagesc(abs(log(data.Ceps2D)))
+set(axCepg,'ydir','normal')
+ylabel(axCepg,'Quefrency [samples]')
+xlabel(axCepg,'frame #')
+title('Cepstrogram (real)')
 end
 
 if plotEn(5)
 figure
 axCep = subplot(3,1,1);
-plot(axCep,MyCeps(1:pm.tSind))
-xlabel('Sample #'),ylabel('Cepstral Value'),title('Overall Cepstrum (real)')
+plot(axCep,MyCeps(1:p.pm.tSind))
+xlabel('Sample #')
+ylabel('Cepstral Value')
+title('Overall Cepstrum (real)')
 
-Qlim = pm.CepsOrder;
+Qlim = p.pm.CepsOrder;
 axS(1) = subplot(3,1,2);
 stem(MyCeps(1:Qlim))
 title(['first ',int2str(Qlim),' Ceptstral quefrency samples over all t'])
 ylabel('cepstral value')
 
 axS(2) = subplot(3,1,3);
-stem(Ceps2D(1:Qlim,pm.tFrameInd)); 
+stem(Ceps2D(1:Qlim, p.pm.tFrameInd));
 title(['first ',int2str(Qlim),' Cepstrum quefrency samples at t=',num2str(data.tOrig(2*pm.tSind),'%03.2f'),' sec'])
 set(axS,'xlim',[0,Qlim],'xtick',1:Qlim)
 end
@@ -105,6 +113,6 @@ if plotEn(5)
 figure
 subplot(2,1,1)
 plot(Ceps.SigSpect)
-wavplay(Ceps.SigOut,pm.Fs)
+wavplay(Ceps.SigOut, p.pm.Fs)
 end
 end
