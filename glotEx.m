@@ -1,13 +1,12 @@
 function [g, G, w] = glotEx(Ag,t0,tf,Tp,t,diag)
 %  Produces simulated Glottal excitation pulses
-%  Michael Hirsch Dec 2011
 %
 %  OUTPUTS:
 %  --------
 %  g = time-domain pulses
 %  G = spectrum of pulses
 %  w = frequency bin centers of G
-% 
+%
 %  INPUTS:
 %  --------
 %  Ag = peak glottal pulse amplitude
@@ -19,7 +18,7 @@ function [g, G, w] = glotEx(Ag,t0,tf,Tp,t,diag)
 %
 %  References;
 %  [1] Rosenberg
-%  [2] J. Linden and J. Skoglund, Investigation on the Audibility of 
+%  [2] J. Linden and J. Skoglund, Investigation on the Audibility of
 %  Glottal Parameter Variations in Speech Synthesis
 if isnan(tf), g = nan; G = nan; w = nan; return, end
 %% before excitation starts

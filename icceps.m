@@ -6,7 +6,6 @@ function x = icceps(xceps,ndelay)
 % ported from https://github.com/python-acoustics/python-acoustics/blob/master/acoustics/cepstrum.py
 % which has 3-clause BSD license.
 %
-% Michael Hirsch 
 
 if nargin<2
     ndelay = 0;

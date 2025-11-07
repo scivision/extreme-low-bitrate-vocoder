@@ -1,4 +1,4 @@
-function [Xfb, fAx] = MyFilterbank(xWind,WinL,Fs,nfft)
+function [Xfb, fAx] = MyFilterbank(xWind, Fs, nfft)
 % we use each column of data, and create frequency bins of data.
 
 % note: the output is NOT amplitude scaled -- it's only relative amplitude

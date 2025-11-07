@@ -24,7 +24,7 @@ LifteredVocalTract = icceps(CLift(:,i));
 %xPreemph = filter([1 -0.65],den,xPreemph);  % cascade filter
     case 'glottal'
         CLift(:,i) = lifter(Cwind,LiftHighQueRecp,'hicut');
-        xPreemph = icceps(CLift(:,i)); %no preemph for glottal
+        % xPreemph = icceps(CLift(:,i)); %no preemph for glottal
     otherwise, error(['unrecognized option',pMode,'in MyLPC'])
 end
 
@@ -70,11 +70,12 @@ formantFreqs = formantFreqs.*Fs/(2*pi); % since f = w/(2pi) and take Fs into acc
     end
 %% diag plot
 if diag
+  txt = "1/Quefrency cutoff: " + num2str(LiftLowQueRecp,'%03.1f') + " [s]  File: " + file;
     %plot
     figure,
     zplane(G(SnapInd),LPCpoles(:,SnapInd)), 
     title({['Poles/zeros of LPC Vocal Tract model @ Time= ',num2str(SnapInd*FrameL/Fs),' sec.'];...
-        ['1/Quefrency cutoff: ',num2str(LiftLowQueRecp,'%03.1f'),' [s]  File: ',file]})
+        txt})
     
     
 StartAx=Fs/1000;               
@@ -83,7 +84,7 @@ q=(StartAx:StopAx)/Fs;
 figure, stem(q,CLift(StartAx:StopAx,SnapInd),'displayname','Liftered Cepstrum'), hold on, 
 stem(q,Cwind(StartAx:StopAx,SnapInd),'r','displayname','un-liftered cepstrum') 
 title({['Liftered Cepstrum into LPC Vocal Tract predictor at Time =  ',num2str(SnapInd*FrameL/Fs), ' sec.'],...
-    ['1/Quefrency cutoff: ',num2str(LiftLowQueRecp,'%03.1f'),' [s]  File: ',file]})
+    txt})
 xlabel('Quefrency [s]'),ylabel('Cepstral Amplitude (relative)'),legend('show')
 end
 

@@ -1,11 +1,5 @@
 function[ FundExciteHz, LifteredGlottal ] = estimateGlottalFreq(xWind,nFrames,Fs,WinL,FrameL,SnapInd,LiftHighQue,file,diag)
 
-try
-    cceps(0);
-catch % octave
-    pkg load signal
-end
-
 StartQueSearch=round(Fs/400); %start quefrency index for Glottal Search                          
 StopQueSearch=round(Fs/60); % stop quefrency index for Glottal Search
 
@@ -51,7 +45,7 @@ if diag
     stem(que,C(StartAx:StopAx,SnapInd),'r','displayname','un-liftered cepstrum'), hold on
     stem(que,CL(StartAx:StopAx,SnapInd),'displayname','Liftered Cepstrum'), 
     title({['High-time Liftered Cepstrum into Glottal Excitation Estimator at Time: ',num2str(SnapInd*FrameL/Fs),' sec.'],...
-        ['1/Quefrency cutoff: ',num2str(LiftHighQue,'%03.1f'),' [s]   File: ',file]})
+        "1/Quefrency cutoff: " + num2str(LiftHighQue,'%03.1f') + " [s]   File: " + file})
     xlabel('Quefrency [s]'),ylabel('Cepstral Amplitude (relative)'),legend('show')
 
     disp(['For Time=',num2str(SnapInd*FrameL/Fs),' sec., Glottal Excitation Freq =',num2str(FundExciteHz(SnapInd),'%03.1f')]);

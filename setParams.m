@@ -1,9 +1,7 @@
 %% configuration and load
-%Michael Hirsch
+
 function pm = setParams()
-% file can be:
-% 'ahOrig.wav','ohOrig.wav','eeOrig.wav','Mine.wav','sinTest.wav'
-pm.file = 'eeOrig.wav'; 
+
 pm.lpcProc = false; %if false, uses Cepstral coeff of LPC model
 pm.pe = [1 0 0 0 0]; %decides which plots will be enabled
 pm.SnapInd = 25; %index to look at a short-time frame for testing 
@@ -29,6 +27,6 @@ pm.thresStart = 0.12;
 pm.thresEnd = 0.15;
 
 pm.nFB = 512; % number of filters in filter bank. pm.nFM >= pm.WinL  "M>=Nw" must be true.
-if pm.nFB<pm.WinL, error('pm.nFB must be greater or equal to pm.WinL in setParams.m'), end
+if pm.nFB < pm.WinL, error('pm.nFB must be greater or equal to pm.WinL in setParams.m'), end
 
 end
