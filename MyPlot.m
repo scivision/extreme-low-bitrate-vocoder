@@ -34,30 +34,35 @@ nfft = fix(length(X)/2);
 hold on
 [Hejw,freq]=freqz(TractG(SI),TractPoles(:,SI),nfft,'half',data.Fs);
 Y = 20*log10(abs(Hejw));
-plot(freq,Y,'linewidth',2,'color','r','displayname','LPC Spectrum');
-plot(freq,X(1:nfft),'--k','Displayname','Original Spectrum (STFT)');
+
+plot(freq,Y, LineWidth=2, Color='r', DisplayName='LPC Spectrum')
+
+plot(freq,X(1:nfft),'--', Color='yellow', Displayname='Original Spectrum (STFT)')
+
 grid on
+
 Finds = nan;
 for i = 1:length(formantFreqs(formantFreqs(:,SI)>0,SI))
     Finds(i) = find(freq>formantFreqs(i,SI),1,'first');
 end
 if ~isnan(Finds)
-plot(freq(Finds-1),Y(Finds-1),'kx','markersize',15,'linewidth',2,'displayname','LPC Poles')
+plot(freq(Finds-1),Y(Finds-1),'x', Color='yellow', MarkerSize=15, LineWidth=2, Displayname='LPC Poles')
 end
 
 EXC = 20*log10(abs(fft(Excite(1:min(length(Excite),2*nfft))))); % ** TEMP **
 if length(EXC)>1
-plot(freq,EXC(1:nfft),'g','Displayname','Glottal Synth. Spect.')
+plot(freq,EXC(1:nfft),'g', Displayname='Glottal Synth. Spect.')
 end
 
-%Sythesized Spectral plot
-%SYNTH = 20*log10(abs(fft(xSynth)));
+% Synthesized Spectral plot
+% SYNTH = 20*log10(abs(fft(xSynth)));
  SYNTH = 20*log10(abs(fft(xSynthW(:,SI)))); % ** TEMP **
 plot(freq,SYNTH(1:nfft),'b','Displayname','Synth. VOICED Spect.')
 
 legend('show')
 title(['Original spectrum at ',num2str(SI*pm.WinL/2/data.Fs),' sec. vs. LPC model.  File: ',file])
-xlabel('Frequency [Hz]'),ylabel('20*log10|X|')
+xlabel('Frequency [Hz]')
+ylabel('20*log10|X|')
 set(gca,'ylim',[-40 40])
 
 if length(Excite)>1
