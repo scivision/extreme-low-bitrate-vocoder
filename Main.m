@@ -1,6 +1,7 @@
-function [xSynth, xSynthW, Excite, TractPoles, TractG] = Main(inputFile, playSound, doPlot)
+function [files, xSynth, xSynthW, Excite, TractPoles, TractG] = Main(inputFile, ProcType, playSound, doPlot)
 arguments
   inputFile (1,1) string = "inputs/eeOrig.wav"
+  ProcType (1,1) string = "keps"
   playSound (1,1) logical = true
   doPlot (1,1) logical = true
 end
@@ -8,15 +9,24 @@ end
 files.plot = tempname + "_PlotVars.mat";
 % shared for plotting while isolating namespace
 files.transmit = tempname + "_transmitCeps.mat";
-files.lpc = tempname + "_LPCcep.dat";
+
 files.excite = tempname + "_fExcite.dat";
 files.out = tempname + "_output.mat";
+switch ProcType
+  case "keps"
+    files.lpc = tempname + "_LPCcep.dat";
+  case "LPC"
+    files.tractG = tempname + "_tractG.dat";
+    files.tractP = tempname + "_tractP.dat";
+    files.err = tempname + "_err.dat";
+  otherwise, error('unknown ProcType')
+end
 %% (1a) Load waveform and parameters, and LPF waveform
 pm = setParams(inputFile);
 
-transmit(pm, files, doPlot)
+transmit(pm, files, ProcType, doPlot)
 
-[xSynth, xSynthW, Excite, TractPoles, TractG] = receive(files);
+[xSynth, xSynthW, Excite, TractPoles, TractG] = receive(files, ProcType);
 
 save(files.out, 'xSynth', 'xSynthW', 'Excite', 'TractPoles', 'TractG')
 

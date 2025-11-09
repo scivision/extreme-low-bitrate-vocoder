@@ -2,9 +2,13 @@ classdef (SharedTestFixtures={ matlab.unittest.fixtures.PathFixture(fileparts(fi
   TestUnit < matlab.unittest.TestCase
 
 properties
-refOutFile = 'ref/output.mat'
 root
 inputAudio
+end
+
+
+properties (TestParameter)
+procType = {'keps', 'LPC'}
 end
 
 
@@ -19,10 +23,12 @@ end
 
 methods(Test)
 
-function test_compare_output_waveform(tc)
-ref = load(fullfile(tc.root, tc.refOutFile));
+function test_compare_output_waveform(tc, procType)
+refFile = fullfile(tc.root, "ref", procType, "output.mat");
 
-[xSynth, xSynthW, Excite, TractPoles, TractG] = Main(tc.inputAudio, false, false);
+ref = load(refFile);
+
+[~, xSynth, xSynthW, Excite, TractPoles, TractG] = Main(tc.inputAudio, procType, false, false);
 
 tc.assertEqual(xSynth, ref.xSynth, RelTol=0.0001, AbsTol=1e-6)
 tc.assertEqual(xSynthW, ref.xSynthW, RelTol=0.0001, AbsTol=1e-6)

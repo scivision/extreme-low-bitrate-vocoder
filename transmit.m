@@ -1,27 +1,23 @@
-function transmit(pm, files, diag)
+function transmit(pm, files, ProcType, diag)
 
 [pm, data] = getSound(pm);
 % also LPF's and VOX detection
 %% (1b) Apply window to data, so we can work with short-time sections
 % window data
-[data.xWind,data.xFrame,data.nFrames,data.window] = ...
-  windowData(data.FiltSound, pm.WinL, pm.FrameL,pm.WinType);
+[data.xWind,data.xFrame,data.nFrames,data.window] = windowData(data.FiltSound, pm.WinL, pm.FrameL, pm.WinType);
 %% (1c) Filterbank of filtered input waveform
 % Could be used to attenuate frequency bands with small amplitudes, that
 % are not important to vocal tract resonances, or for a "spectrogram" display
 % [ Xfb, XfbBins ]  = MyFilterbank(data.xWind, data.Fs, pm.nFB);
 %% (2) Cepstral alanysis to extract fundamental glottal impulse frequency
-fundExcite = estimateGlottalFreq(...
-  data.xWind,data.nFrames,data.Fs,pm.WinL,pm.FrameL,pm.SnapInd,...
-  pm.LiftHighQueRecp, pm.inputFile, diag);
+fundExcite = estimateGlottalFreq(data.xWind,data.nFrames,data.Fs,pm.WinL,pm.FrameL,pm.SnapInd, pm.LiftHighQueRecp, pm.inputFile, diag);
 % compute "cepstrogram" for later plotting
 % the cepstrogram, like the spectrogram, is just the windowed short-time
 % segments of the input signal put through a cepstral "lifterbank"
 data.Ceps2D = kepstrogram(data.xWind,data.nFrames);
 %% LPC coefficient generation: vocal tract
 [TractPoles, TractG, FFerr, formantFreqs] = GenerateLPCcoeff(...
-  data.xWind,pm.p,data.nFrames,pm.WinL,pm.FrameL,...
-  pm.PreEmphAlpha,data.Fs,pm.SnapInd,pm.LiftLowQueRecp,[], pm.inputFile, 'vtract', diag);
+  data.xWind,pm.p,data.nFrames,pm.WinL,pm.FrameL, pm.PreEmphAlpha,data.Fs,pm.SnapInd,pm.LiftLowQueRecp,[], pm.inputFile, 'vtract', diag);
 %% test receiver w/o transmit TEST ONLY'
 %[xSynth Excite] = genLPC(...
 %   TractG,TractPoles,fundExcite,FFerr,pm.Ns,data.Fs,pm.FrameL,pm.WinL,data.nFrames,pm.glottMode,pm.SnapInd,'transmitter',false);
@@ -40,10 +36,10 @@ title('Cepstrogram')
 end
 
 %% "transmit" data by saving to disk
-ProcType = 'keps';
 switch ProcType
-  case 'LPC', transmitter3(files.transmit, TractPoles,TractG,FFerr, fundExcite,data.nFrames,pm.WinL,pm.FrameL,data.Ns,data.Fs,pm.p,pm.glottMode, files.tractP, files.tractG, files.excite);
-  case 'keps', transmitterCeps(files.transmit, LPCcep, fundExcite, data.nFrames, pm.WinL, pm.FrameL, data.Ns, data.Fs, pm.KeepLPCceps, pm.p, pm.glottMode, files.lpc, files.excite);
+  case 'LPC', transmitter3(files, TractPoles,TractG,FFerr, fundExcite,data.nFrames,pm.WinL,pm.FrameL,data.Ns,data.Fs, pm.p, pm.glottMode);
+  case 'keps', transmitterCeps(files, LPCcep, fundExcite, data.nFrames, pm.WinL, pm.FrameL, data.Ns, data.Fs, pm.KeepLPCceps, pm.p, pm.glottMode);
+  otherwise, error('unexpected ProcType')
 end
 
 save(files.plot, 'TractPoles', 'TractG', 'fundExcite', 'formantFreqs', 'data', 'pm')

@@ -4,6 +4,8 @@ function [TractPoles,TractG,fundExcite,FFerr,Ns,Fs,FrameL,WinL,nFrames,glottMode
 load(files.transmit, 'p', 'nFrames', 'WinL', 'FrameL', 'Ns', 'Fs', 'glottMode', 'sc');
 %% convert integers back to double
 
+FFerr = nan;
+
 fid(1) = fopen(files.tractP,'r');
 % TractPoles = fread(fid(1),[p+1,nFrames],'int16=>double') / sc.TPsc/ 32767; %int16
 fid(2) = fopen(files.tractG,'r');
@@ -32,9 +34,9 @@ switch fMode
     fundExcite(fundExcite==0) = NaN; %patches since later code uses NaN to indicate no speech
 end
 
-nFrames = double(nFrames); WinL = double(WinL); FrameL = double(FrameL);
-Ns = double(Ns); Fs = double(Fs);
-
-fileInfo = dir([pwd '\' file]);
-disp(['Loaded voice file size: ',int2str(fileInfo.bytes),' bytes'])
+nFrames = double(nFrames);
+WinL = double(WinL);
+FrameL = double(FrameL);
+Ns = double(Ns);
+Fs = double(Fs);
 end

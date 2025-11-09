@@ -1,13 +1,13 @@
-function [TractPoles,TractG,fundExcite,FFerr,Ns,Fs,FrameL,WinL,nFrames, glottMode] = receiverCeps(paramFile, lpcFile, exciteFile)
+function [TractPoles,TractG,fundExcite,FFerr,Ns,Fs,FrameL,WinL,nFrames, glottMode] = receiverCeps(files)
 
 FFerr = [];
 
-d = load(paramFile);
+d = load(files.transmit);
 glottMode = d.glottMode;
 %% convert integers back to double
 
-fid(1) = fopen(lpcFile,'r');
-fid(2) = fopen(exciteFile,'r');
+fid(1) = fopen(files.lpc,'r');
+fid(2) = fopen(files.excite,'r');
 
 fMode = '2bit';%'3bit';%'4bit';%'8bit';%'double'; %'4bit';
 switch fMode

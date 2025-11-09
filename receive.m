@@ -1,9 +1,9 @@
-function [xSynth, xSynthW, Excite, TractPoles, TractG] = receive(files)
+function [xSynth, xSynthW, Excite, TractPoles, TractG] = receive(files, ProcType)
 %% regenerate speech via glottal excitation
-ProcType = 'keps';
 switch ProcType
-  case 'LPC', [TractPoles,TractG,fundExcite,FFerr,Ns,Fs,FrameL,WinL,nFrames,glottMode] = receiver3(files.transmit);
-  case 'keps', [TractPoles,TractG,fundExcite,FFerr,Ns,Fs,FrameL,WinL,nFrames,glottMode] = receiverCeps(files.transmit, files.lpc, files.excite);
+  case 'LPC', [TractPoles,TractG,fundExcite,FFerr,Ns,Fs,FrameL,WinL,nFrames,glottMode] = receiver3(files);
+  case 'keps', [TractPoles,TractG,fundExcite,FFerr,Ns,Fs,FrameL,WinL,nFrames,glottMode] = receiverCeps(files);
+  otherwise, error('unknown ProcType')
 end
 
 [xSynth, xSynthW, Excite] = regenerateSignalFromLPCcoeff(...
