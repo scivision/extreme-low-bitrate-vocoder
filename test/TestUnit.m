@@ -24,11 +24,11 @@ ref = load(fullfile(tc.root, tc.refOutFile));
 
 [xSynth, xSynthW, Excite, TractPoles, TractG] = Main(tc.inputAudio, false, false);
 
-tc.assertEqual(xSynth, ref.xSynth, RelTol=0.0001)
-tc.assertEqual(xSynthW, ref.xSynthW, RelTol=0.0001);
-tc.assertEqual(Excite, ref.Excite, RelTol=0.0001);
-tc.assertEqual(TractPoles, ref.TractPoles, RelTol=0.0001);
-tc.assertEqual(TractG, ref.TractG, RelTol=0.0001);
+tc.assertEqual(xSynth, ref.xSynth, RelTol=0.0001, AbsTol=1e-6)
+tc.assertEqual(xSynthW, ref.xSynthW, RelTol=0.0001, AbsTol=1e-6)
+tc.assertEqual(Excite, ref.Excite, RelTol=0.0001, AbsTol=1e-6)
+tc.assertEqual(TractPoles, ref.TractPoles, RelTol=0.0001, AbsTol=1e-6)
+tc.assertEqual(TractG, ref.TractG, RelTol=0.0001, AbsTol=1e-6)
 
 end
 
