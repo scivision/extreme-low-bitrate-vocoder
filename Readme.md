@@ -94,3 +94,59 @@ By the properties of logarithms, the product of G(z)V(z) can be represented in t
 and so on, thereby allowing separation of vocal tract responses V(z) from the glottal excitation G(z). The process of “liftering” as discussed by lifter.m allow this selection to be made almost trivially easy.
 
 This project did not comprise an exhaustive optimization by any means, but was a reasonable first pass at applying introductory graduate-level knowledge to the task.
+
+## Algorithm
+
+The program uses several modules to process data.
+A separate GUI was developed to look at Spectrograms of the data.
+The main program did not yet have a GUI developed.
+Instead, the user enters relevant parameters into “setparams.m” as text.
+A simplified block diagram overview of the final implementation is given in Figure 1 for the transmitter, and Figure 2 for the receiver.
+
+### SetParams.m
+
+The program loads user parameters such as:
+
+Cepstrum liftering parameters:
+
+Low-quefrency pass: to allow estimation of glottal pulse period
+
+High-Quefrequency pass: to allow LPC modeling of vocal tract, all-pole model
+
+Pre-emphasis freq. for LPC model
+
+Window type for time-domain signal (e.g. Hamming)
+
+Window length (typically 256 samples)
+
+Frame length (typically 128 samples—50% overlap)
+
+VOX start/stop parameters
+
+Set glottal excitation:
+
+Simulated glottal pulse train
+
+Feedforward to estimate residual error
+
+Frame length: 128 samples (16 milliseconds)
+
+Window length: 256 samples (32 milliseconds
+
+That is, 50% overlap between windows.
+
+Window type: Hamming (other types selectable)
+
+The program can optionally Low-Pass filter the incoming signal, but this was experimentally determined to not be necessary (it could in the future be deemed useful to band-pass filter the signal, by ignoring frequency bands with little content in “MyFilterbank.m”.
+
+### getSound.m
+
+Simple voice detection algorithm is used, by detecting the first and last time indices that the sound crosses a threshold amplitude value. Before and after this time, the sound is set to zero. This helps avoid the program making filters for non-existent speech.
+
+Optionally, a 200-tap FIR filter can be used to low-pass filter, but this functionality was not used for this program.
+
+### windowData.m
+
+Break up data into frames, and window each frame (Hamming window) in “windowData.m”
+
+Currently, can choose “Hann”, “Bartlett (triangular)”, “Hamming”, and “rectangular”. The frame/window arrangement is seen in Figure 3
