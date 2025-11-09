@@ -1,16 +1,17 @@
 function transmit(plotFile, transmitFile, pm, lpcFile, exciteFile, diag)
-[pm, data] = getSound(pm); %also LPF's and VOX detection
+
+[pm, data] = getSound(pm);
+% also LPF's and VOX detection
 %% (1b) Apply window to data, so we can work with short-time sections
 % window data
 [data.xWind,data.xFrame,data.nFrames,data.window] = ...
   windowData(data.FiltSound, pm.WinL, pm.FrameL,pm.WinType);
 %% (1c) Filterbank of filtered input waveform
 % Could be used to attenuate frequency bands with small amplitudes, that
-% are not important to vocal tract resonances, or for a "spectrogram" type
-% display
-[ Xfb, XfbBins ]  = MyFilterbank(data.xWind,pm.WinL,data.Fs,pm.nFB);
+% are not important to vocal tract resonances, or for a "spectrogram" display
+% [ Xfb, XfbBins ]  = MyFilterbank(data.xWind, data.Fs, pm.nFB);
 %% (2) Cepstral alanysis to extract fundamental glottal impulse frequency
-[fundExcite, LifteredGlottal] = estimateGlottalFreq(...
+fundExcite = estimateGlottalFreq(...
   data.xWind,data.nFrames,data.Fs,pm.WinL,pm.FrameL,pm.SnapInd,...
   pm.LiftHighQueRecp, pm.inputFile, diag);
 % compute "cepstrogram" for later plotting
@@ -45,7 +46,7 @@ switch ProcType
   case 'keps', transmitterCeps(transmitFile, LPCcep, fundExcite, data.nFrames, pm.WinL, pm.FrameL, data.Ns, data.Fs, pm.KeepLPCceps, pm.p, pm.glottMode, lpcFile, exciteFile);
 end
 
-save(plotFile)
+save(plotFile, 'TractPoles', 'TractG', 'fundExcite', 'formantFreqs', 'data', 'pm')
 % used for plotting only
 
 end

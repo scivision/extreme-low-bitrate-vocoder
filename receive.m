@@ -3,7 +3,7 @@ function [xSynth, xSynthW, Excite, TractPoles, TractG] = receive(paramFile, lpcF
 ProcType = 'keps';
 switch ProcType
   case 'LPC', [TractPoles,TractG,fundExcite,FFerr,Ns,Fs,FrameL,WinL,nFrames,glottMode] = receiver3(paramFile);
-  case 'keps', [TractPoles,TractG,LPCcep,fundExcite,FFerr,Ns,Fs,FrameL,WinL,nFrames,glottMode] = receiverCeps(paramFile, lpcFile, exciteFile);
+  case 'keps', [TractPoles,TractG,fundExcite,FFerr,Ns,Fs,FrameL,WinL,nFrames,glottMode] = receiverCeps(paramFile, lpcFile, exciteFile);
 end
 
 [xSynth, xSynthW, Excite] = regenerateSignalFromLPCcoeff(...

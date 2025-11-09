@@ -23,7 +23,9 @@ for i = 1:nFrames
   % remove high-time quefrencies, so glottal impulse train period can be estimated
   CL(:,i) = lifter(C(:,i), Fs, LiftHighQue, 'hicut');
 
-  LifteredGlottal(:,i) = icceps(CL(:,i));
+  if nargout > 1
+    LifteredGlottal(:,i) = icceps(CL(:,i));
+  end
   %find fundamental
   %pick the quefrency with the highest amplitude -- since vocal tract
   %quefrencies have been liftered out, only glottal impulse train is left

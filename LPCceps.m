@@ -12,6 +12,10 @@ end
 LPCcep(KeepCeps+1:end,:) = 0;
 
 if diag
+  CepPoles(modelOrder+1, nFrames) = nan;
+  Hejw((modelOrder+1)^2, nFrames) = nan;
+  w((modelOrder+1)^2, nFrames) = nan;
+  CepsFFerr(modelOrder+1, nFrames) = nan;
 
   for i = 1:nFrames
     % Convert cepstral coefficients back to LPC using custom function

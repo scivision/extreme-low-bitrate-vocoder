@@ -1,10 +1,10 @@
 function PlayOld()
 
-load('archive/output.mat')
+o = load('archive/output.mat');
 
-MyPlot('archive/AllVariables.mat',xSynth,xSynthW,Excite,TractPoles,TractG)
+MyPlot('archive/AllVariables.mat', o.xSynth, o.xSynthW, o.Excite, o.TractPoles, o.TractG)
 
-player = audioplayer(xSynth, 8000);
+player = audioplayer(o.xSynth, 8000);
 playblocking(player)
 
 end
