@@ -10,9 +10,9 @@ if ~isfolder(reportDir)
 end
 
 if isMATLABReleaseOlderThan('R2023a')
-  plan('test') = matlab.buildtool.Task('Actions', @(test_root) legacy_test(test_root));
+  plan('test') = matlab.buildtool.Task(Actions=@(context) legacy_test(context, test_root));
 else
-  plan('test') =  matlab.buildtool.tasks.TestTask(test_root, SourceFiles=pkgDir);
+  plan('test') = matlab.buildtool.tasks.TestTask(test_root, SourceFiles=pkgDir);
 end
 
 if ~isMATLABReleaseOlderThan('R2024a')
