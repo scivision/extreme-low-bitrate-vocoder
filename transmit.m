@@ -1,4 +1,4 @@
-function transmit(plotFile, transmitFile, pm, lpcFile, exciteFile, diag)
+function transmit(pm, files, diag)
 
 [pm, data] = getSound(pm);
 % also LPF's and VOX detection
@@ -42,11 +42,11 @@ end
 %% "transmit" data by saving to disk
 ProcType = 'keps';
 switch ProcType
-  case 'LPC', transmitter3(transmitFile, TractPoles,TractG,FFerr, fundExcite,data.nFrames,pm.WinL,pm.FrameL,data.Ns,data.Fs,pm.p,pm.glottMode);
-  case 'keps', transmitterCeps(transmitFile, LPCcep, fundExcite, data.nFrames, pm.WinL, pm.FrameL, data.Ns, data.Fs, pm.KeepLPCceps, pm.p, pm.glottMode, lpcFile, exciteFile);
+  case 'LPC', transmitter3(files.transmit, TractPoles,TractG,FFerr, fundExcite,data.nFrames,pm.WinL,pm.FrameL,data.Ns,data.Fs,pm.p,pm.glottMode, files.tractP, files.tractG, files.excite);
+  case 'keps', transmitterCeps(files.transmit, LPCcep, fundExcite, data.nFrames, pm.WinL, pm.FrameL, data.Ns, data.Fs, pm.KeepLPCceps, pm.p, pm.glottMode, files.lpc, files.excite);
 end
 
-save(plotFile, 'TractPoles', 'TractG', 'fundExcite', 'formantFreqs', 'data', 'pm')
+save(files.plot, 'TractPoles', 'TractG', 'fundExcite', 'formantFreqs', 'data', 'pm')
 % used for plotting only
 
 end

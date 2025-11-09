@@ -5,23 +5,23 @@ arguments
   doPlot (1,1) logical = true
 end
 
-plotFile = tempname + "_PlotVars.mat";
+files.plot = tempname + "_PlotVars.mat";
 % shared for plotting while isolating namespace
-paramFile = tempname + "_transmitCeps.mat";
-lpcFile = tempname + "_LPCcep.dat";
-exciteFile = tempname + "_fExcite.dat";
-outputFile = tempname + "_output.mat";
+files.transmit = tempname + "_transmitCeps.mat";
+files.lpc = tempname + "_LPCcep.dat";
+files.excite = tempname + "_fExcite.dat";
+files.out = tempname + "_output.mat";
 %% (1a) Load waveform and parameters, and LPF waveform
 pm = setParams(inputFile);
 
-transmit(plotFile, paramFile, pm, lpcFile, exciteFile, doPlot)
+transmit(pm, files, doPlot)
 
-[xSynth, xSynthW, Excite, TractPoles, TractG] = receive(paramFile, lpcFile, exciteFile);
+[xSynth, xSynthW, Excite, TractPoles, TractG] = receive(files);
 
-save(outputFile, 'xSynth', 'xSynthW', 'Excite', 'TractPoles', 'TractG')
+save(files.out, 'xSynth', 'xSynthW', 'Excite', 'TractPoles', 'TractG')
 
 if doPlot
-  MyPlot(plotFile,xSynth,xSynthW,Excite)
+  MyPlot(files.plot, xSynth, xSynthW, Excite)
 end
 
 if playSound
