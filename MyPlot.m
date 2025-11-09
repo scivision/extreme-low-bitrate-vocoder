@@ -1,29 +1,30 @@
 function MyPlot(file,xSynth,xSynthW,Excite,TractPoles,TractG,formantFreqs)
 load(file)
+
+
 SI = pm.SnapInd; plotEn = pm.pe;
 %MyPlot(tOrig,MySound,MyCeps,Ceps2D,pm,Ceps)
 figure('pos',[70 50 800 820])
-axT(1) = subplot(3,1,1);
-plot(axT(1),data.tOrig, data.Sound)
-title(axT(1),['Time-domain waveform: ',pm.file])
-ylabel(axT(1),'Relative Amplitude')
-xlabel(axT(1),'time [sec]')
-set(axT(1),'ylim',[-1 1])
+ax = subplot(3,1,1);
+plot(ax,data.tOrig, data.Sound)
+title(ax, "Time-domain waveform: " + pm.inputFile)
+ylabel(ax,'Relative Amplitude')
+xlabel(ax,'time [sec]')
+ylim(ax, [-1 1])
 
 % if plotEn(2)
-% axT(2)=subplot(3,1,2);
+% ax = subplot(3,1,2);
 % plot(axT(2),data.tOrig, data.testWindSound)
-% title(axT(2),['Time-domain Windowed Output (pre-proc): ',pm.file])
-% ylabel(axT(2),'Relative Amplitude'),xlabel(axT(2),'time [sec]')
-% set(axT(2),'ylim',[-1 1])
+% title(ax, "Time-domain Windowed Output (pre-proc): " + pm.inputFile)
+% ylabel(ax,'Relative Amplitude'),xlabel(ax,'time [sec]')
+% ylim(ax, [-1 1])
 % end
 
-axT(3)=subplot(3,1,3);
-plot(axT(3),data.tOrig, xSynth)
-title(axT(3),['Time-domain Synthesized LPC output: ',pm.file])
-ylabel(axT(3),'Relative Amplitude'),xlabel(axT(3),'time [sec]')
-set(axT(3),'ylim',[-1 1])
-
+ax = subplot(3,1,3);
+plot(ax, data.tOrig, xSynth)
+title(ax, "Time-domain Synthesized LPC output")
+ylabel(ax,'Relative Amplitude'),xlabel(ax,'time [sec]')
+ylim(ax, [-1 1])
 
 
 %% nice plot
@@ -60,10 +61,10 @@ end
 plot(freq,SYNTH(1:nfft),'b','Displayname','Synth. VOICED Spect.')
 
 legend('show')
-title(['Original spectrum at ',num2str(SI*pm.WinL/2/data.Fs),' sec. vs. LPC model.  File: ',file])
+title("Original spectrum at " + num2str(SI*pm.WinL/2/data.Fs) + " sec. vs. LPC model.")
 xlabel('Frequency [Hz]')
 ylabel('20*log10|X|')
-set(gca,'ylim',[-40 40])
+ylim([-40 40])
 
 if length(Excite)>1
 %%glottal excitation
@@ -76,10 +77,11 @@ end
 if plotEn(3)
 figure
 imagesc(data.tOrig,data.fAx,10*log10(abs(data.Pxx)))
-set(gca,'Clim',[-100 -10])
-axis xy
-xlabel('Time [sec]'),ylabel('Frequency [Hz]')
-title(['FIR filtered Time-domain input spectrum: ',pm.file])
+clim([-100 -10])
+axis('xy')
+xlabel('Time [sec]')
+ylabel('Frequency [Hz]')
+title("FIR filtered Time-domain input spectrum: " + pm.inputFile)
 %surf(10*log10(abs(Pxx)))
 end
 if plotEn(4)
@@ -106,7 +108,7 @@ title(['first ',int2str(Qlim),' Ceptstral quefrency samples over all t'])
 ylabel('cepstral value')
 
 axS(2) = subplot(3,1,3);
-stem(Ceps2D(1:Qlim,pm.tFrameInd)); 
+stem(Ceps2D(1:Qlim,pm.tFrameInd));
 title(['first ',int2str(Qlim),' Cepstrum quefrency samples at t=',num2str(data.tOrig(2*pm.tSind),'%03.2f'),' sec'])
 set(axS,'xlim',[0,Qlim],'xtick',1:Qlim)
 end

@@ -12,7 +12,7 @@ function transmit(plotFile, transmitFile, pm, lpcFile, exciteFile)
 %% (2) Cepstral alanysis to extract fundamental glottal impulse frequency
 [fundExcite, LifteredGlottal] = estimateGlottalFreq(...
   data.xWind,data.nFrames,data.Fs,pm.WinL,pm.FrameL,pm.SnapInd,...
-  pm.LiftHighQueRecp,pm.file,true);
+  pm.LiftHighQueRecp, pm.inputFile,true);
 % compute "cepstrogram" for later plotting
 % the cepstrogram, like the spectrogram, is just the windowed short-time
 % segments of the input signal put through a cepstral "lifterbank"
@@ -20,14 +20,14 @@ data.Ceps2D = kepstrogram(data.xWind,data.nFrames);
 %% LPC coefficient generation: vocal tract
 [TractPoles, TractG, FFerr, formantFreqs] = GenerateLPCcoeff(...
   data.xWind,pm.p,data.nFrames,pm.WinL,pm.FrameL,...
-  pm.PreEmphAlpha,data.Fs,pm.SnapInd,pm.LiftLowQueRecp,[],pm.file,'vtract',pm.glottMode,true);
+  pm.PreEmphAlpha,data.Fs,pm.SnapInd,pm.LiftLowQueRecp,[], pm.inputFile,'vtract',pm.glottMode,true);
 %% test receiver w/o transmit TEST ONLY'
 %[xSynth Excite] = genLPC(...
 %   TractG,TractPoles,fundExcite,FFerr,pm.Ns,data.Fs,pm.FrameL,pm.WinL,data.nFrames,pm.glottMode,pm.SnapInd,'transmitter',false);
 %% LPC to Cepstrum
 [LPCcep, CepsPoles, CepsG, CepsFFerr] = LPCceps(...
   data.xWind,TractG,TractPoles,fundExcite,pm.KeepLPCceps,FFerr,...
-  data.nFrames,pm.WinL,pm.FrameL,data.Ns,data.Fs,pm.file,pm.glottMode,pm.p,pm.SnapInd,true);
+  data.nFrames,pm.WinL,pm.FrameL,data.Ns,data.Fs, pm.inputFile,pm.glottMode,pm.p,pm.SnapInd,true);
 %% plot cepstrum
 [data.cepstr] = kepstrum(data.Sound);
 Ceps2D = kepstrogram(data.xFrame,data.nFrames);

@@ -1,19 +1,35 @@
-function plotFile = Main()
+function plotFile = Main(inputFile, playSound)
+arguments
+  inputFile (1,1) string = "inputs/eeOrig.wav"
+  playSound (1,1) logical = true
+end
 
-plotFile = tempname; % shared for plotting while isolating namespace
-paramFile = tempname;
-lpcFile = tempname;
-exciteFile = tempname;
+plotFile = tempname + "_PlotVars.mat";
+% shared for plotting while isolating namespace
+paramFile = tempname + "_transmitCeps.mat";
+lpcFile = tempname + "_LPCcep.dat";
+exciteFile = tempname + "_fExcite.dat";
+outputFile = tempname + "_output.mat";
 %% (1a) Load waveform and parameters, and LPF waveform
-pm = setParams();
+pm = setParams(inputFile);
 
 transmit(plotFile, paramFile, pm, lpcFile, exciteFile)
 
 [xSynth, xSynthW, Excite, TractPoles, TractG] = receive(paramFile, lpcFile, exciteFile);
 
+save(outputFile, 'xSynth', 'xSynthW', 'Excite', 'TractPoles', 'TractG')
+
 MyPlot(plotFile,xSynth,xSynthW,Excite,TractPoles,TractG)
 
-player = audioplayer(xSynth, 8000);
-playblocking(player)
+if playSound
+  ai = audiodevinfo();
+  if isempty(ai)
+    disp("no audio device found, skipping playback")
+  else
+    disp("Playing Synthesized Audio from Transmitted LPC Cepstrum and Excitation generated from " + pm.inputFile)
+    player = audioplayer(xSynth, 8000);
+    playblocking(player)
+  end
+end
 
 end

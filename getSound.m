@@ -1,8 +1,12 @@
 function [pm, data] = getSound(pm)
-[data.Sound,data.Fs] = audioread(pm.file); % read in file and convert to vector data
+arguments
+  pm (1,1) struct
+end
+
+[data.Sound,data.Fs] = audioread(pm.inputFile); % read in file and convert to vector data
 
 data.Ns = length(data.Sound);
-data.tOrig = 0:1/data.Fs:6; 
+data.tOrig = 0:1/data.Fs:6;
 data.tOrig = data.tOrig(1:data.Ns)'; %sets up appropriate time vector
 
 %% VOX
@@ -13,13 +17,13 @@ lastInd = find(data.Sound>pm.thresEnd,1,'last');
 data.Sound(1:firstInd-1) = 0;
 data.Sound(lastInd+1:end) = 0;
 
-%% filter sound 
+%% filter sound
 %so as to "spend" filter coefficients on lowest, and hence
 %most important, formants
 if ~isnan(pm.LPFfreq)
-FIRorder = 200; 
+FIRorder = 200;
 Wn = pm.LPFfreq /(data.Fs/2); %cutoff freq
-FIRcoeff =  fir1(FIRorder,Wn); %designs FIR LPF coefficients
+FIRcoeff = fir1(FIRorder,Wn); %designs FIR LPF coefficients
 data.FiltSound = filter(FIRcoeff,1,data.Sound(:)); %implements FIR filter coeffcients
 disp(['Input sound Low-Pass Filtered with cutoff frequency: ,',num2str(pm.LPFfreq),' Hz.'])
 else
