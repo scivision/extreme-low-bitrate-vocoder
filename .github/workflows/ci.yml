@@ -1,0 +1,48 @@
+name: matlab
+
+on:
+  push:
+    paths:
+    - "**.m"
+    - "**.cmake"
+    - "**/CMakeLists.txt"
+    - ".github/workflows/ci.yml"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+
+  core:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04, macos-latest]
+        matlab: [R2025b]
+
+
+    runs-on: ${{ matrix.os }}
+
+    timeout-minutes: 15
+
+    steps:
+
+    - name: Install MATLAB
+      timeout-minutes: 10
+      uses: matlab-actions/setup-matlab@v2
+      with:
+        release: ${{ matrix.matlab }}
+        cache: true
+
+    - uses: actions/checkout@v5
+
+    - name: Check Matlab code
+      uses: matlab-actions/run-build@v2
+      with:
+        tasks: check
+
+    - name: Test MEX
+      uses: matlab-actions/run-build@v2
+      with:
+        tasks: test
