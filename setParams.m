@@ -1,5 +1,5 @@
 %% configuration and load
-%Michael Hirsch
+
 function pm = setParams(inputFile)
 % file can be:
 % 'ahOrig.wav','ohOrig.wav','eeOrig.wav','Mine.wav','sinTest.wav'
