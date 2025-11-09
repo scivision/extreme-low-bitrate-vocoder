@@ -26,9 +26,10 @@ if diag
 
 figure
 Y = 20*log10(abs(Hejw));
- title(['Cepstral compressed frequency response at t = ',num2str(SI*FrameL/Fs)])
-xlabel('Frequency [Hz]'), ylabel('Cepstral Liftered LPC Magnitude Reponse (dB Relative)')
-pCep = plot(w(1:fix(WinL/2),SI),Y(1:fix(WinL/2),SI),'linewidth',2,'color','r','displayname','LPC Spectrum');
+title(['Cepstral compressed frequency response at t = ',num2str(SI*FrameL/Fs)])
+xlabel('Frequency [Hz]')
+ylabel('Cepstral Liftered LPC Magnitude Reponse (dB Relative)')
+plot(w(1:fix(WinL/2),SI),Y(1:fix(WinL/2),SI),'linewidth',2,'color','r','displayname','LPC Spectrum');
 
 for i = 1: numel(CepPoles)
     if abs(CepPoles(i))>1
@@ -40,8 +41,10 @@ end
 %     ones(1,nFrames),CepPoles,fundExcite,LPCerr,Ns,Fs,...
 %     FrameL,WinL,nFrames,glottMode,SI,'Cepstral Processor',diag);
 %
-stem(mean(LPCcep,2)); set(gca,'ylim',[-1 1])
-title(['MEAN of LPC-cepstrum, ',file]),xlabel('quefrency(n)')
+stem(mean(LPCcep,2))
+ylim([-1 1])
+title("MEAN of LPC-cepstrum " + file)
+xlabel('quefrency(n)')
 
 end
 

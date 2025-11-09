@@ -1,7 +1,8 @@
-function plotFile = Main(inputFile, playSound)
+function [xSynth, xSynthW, Excite, TractPoles, TractG] = Main(inputFile, playSound, doPlot)
 arguments
   inputFile (1,1) string = "inputs/eeOrig.wav"
   playSound (1,1) logical = true
+  doPlot (1,1) logical = true
 end
 
 plotFile = tempname + "_PlotVars.mat";
@@ -13,13 +14,15 @@ outputFile = tempname + "_output.mat";
 %% (1a) Load waveform and parameters, and LPF waveform
 pm = setParams(inputFile);
 
-transmit(plotFile, paramFile, pm, lpcFile, exciteFile)
+transmit(plotFile, paramFile, pm, lpcFile, exciteFile, doPlot)
 
 [xSynth, xSynthW, Excite, TractPoles, TractG] = receive(paramFile, lpcFile, exciteFile);
 
 save(outputFile, 'xSynth', 'xSynthW', 'Excite', 'TractPoles', 'TractG')
 
-MyPlot(plotFile,xSynth,xSynthW,Excite,TractPoles,TractG)
+if doPlot
+  MyPlot(plotFile,xSynth,xSynthW,Excite,TractPoles,TractG)
+end
 
 if playSound
   ai = audiodevinfo();
