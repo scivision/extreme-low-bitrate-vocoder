@@ -31,14 +31,13 @@ for i = 1:nFrames
 end %for
 
 if diag
-    figure,zplane(TractG(SnapInd),TractPoles(:,SnapInd))
+    figure
+    zplane(TractG(SnapInd),TractPoles(:,SnapInd))
     title([Xmode,' pole/zero plot'])
 end %if
 
 xSynth = OLA(xSynthW,FrameL,WinL,Ns);  
-xSynth = xSynth-mean(xSynth); %xSynth = xSynth./max(xSynth);
+xSynth = xSynth - mean(xSynth); %xSynth = xSynth./max(xSynth);
 %plot(tOrig,xSynth)
-player=audioplayer(xSynth,8000);
-play(player)
 
 end

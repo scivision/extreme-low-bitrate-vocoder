@@ -1,5 +1,4 @@
-% Michael Hirsch 2011
-function  AudioCepProc = Main()
+function plotFile = Main()
 
 plotFile = tempname; % shared for plotting while isolating namespace
 paramFile = tempname;
@@ -13,5 +12,8 @@ transmit(plotFile, paramFile, pm, lpcFile, exciteFile)
 [xSynth, xSynthW, Excite, TractPoles, TractG] = receive(paramFile, lpcFile, exciteFile);
 
 MyPlot(plotFile,xSynth,xSynthW,Excite,TractPoles,TractG)
+
+player = audioplayer(xSynth, 8000);
+playblocking(player)
 
 end
