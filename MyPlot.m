@@ -1,5 +1,8 @@
-function MyPlot(file,xSynth,xSynthW,Excite,TractPoles,TractG,formantFreqs)
-load(file)
+function MyPlot(file, xSynth, xSynthW, Excite)
+
+d = load(file);
+data = d.data;
+pm = d.pm;
 
 
 SI = pm.SnapInd; plotEn = pm.pe;
@@ -23,7 +26,8 @@ ylim(ax, [-1 1])
 ax = subplot(3,1,3);
 plot(ax, data.tOrig, xSynth)
 title(ax, "Time-domain Synthesized LPC output")
-ylabel(ax,'Relative Amplitude'),xlabel(ax,'time [sec]')
+ylabel(ax,'Relative Amplitude')
+xlabel(ax,'time [sec]')
 ylim(ax, [-1 1])
 
 
@@ -33,7 +37,7 @@ X = 20*log10(abs(fft(data.xFrame(:,SI))));
 
 nfft = fix(length(X)/2);
 hold on
-[Hejw,freq]=freqz(TractG(SI),TractPoles(:,SI),nfft,'half',data.Fs);
+[Hejw,freq] = freqz(d.TractG(SI), d.TractPoles(:,SI), nfft,'half', data.Fs);
 Y = 20*log10(abs(Hejw));
 
 plot(freq,Y, LineWidth=2, Color='r', DisplayName='LPC Spectrum')
@@ -43,8 +47,8 @@ plot(freq,X(1:nfft),'--', Color='yellow', Displayname='Original Spectrum (STFT)'
 grid on
 
 Finds = nan;
-for i = 1:length(formantFreqs(formantFreqs(:,SI)>0,SI))
-    Finds(i) = find(freq>formantFreqs(i,SI),1,'first');
+for i = 1:length(d.formantFreqs(d.formantFreqs(:,SI)>0, SI))
+    Finds(i) = find(freq>d.formantFreqs(i,SI),1,'first');
 end
 if ~isnan(Finds)
 plot(freq(Finds-1),Y(Finds-1),'x', Color='yellow', MarkerSize=15, LineWidth=2, Displayname='LPC Poles')
@@ -57,7 +61,7 @@ end
 
 % Synthesized Spectral plot
 % SYNTH = 20*log10(abs(fft(xSynth)));
- SYNTH = 20*log10(abs(fft(xSynthW(:,SI)))); % ** TEMP **
+SYNTH = 20*log10(abs(fft(xSynthW(:, SI)))); % ** TEMP **
 plot(freq,SYNTH(1:nfft),'b','Displayname','Synth. VOICED Spect.')
 
 legend('show')
@@ -71,7 +75,8 @@ if length(Excite)>1
 figure('pos',[70 50 520 460], Name='glottal excitation')
 stem(data.tOrig(1:pm.WinL),Excite)
 title('glottal excitation')
-xlabel('time [sec]'),ylabel('amplitude [dimensionless]')
+xlabel('time [sec]')
+ylabel('amplitude [dimensionless]')
 end
 %% others
 if plotEn(3)
@@ -85,12 +90,12 @@ title("FIR filtered Time-domain input spectrum: " + pm.inputFile)
 %surf(10*log10(abs(Pxx)))
 end
 if plotEn(4)
-   fCG= figure; axCepg = axes('parent',fCG);
-imagesc(abs(log(data.Ceps2D)))
-set(axCepg,'ydir','normal')
-ylabel(axCepg,'Quefrency [samples]')
-xlabel(axCepg,'frame #')
-title('Cepstrogram (real)')
+  fCG = figure; axCepg = axes('parent',fCG);
+  imagesc(abs(log(data.Ceps2D)))
+  ydir(axCepg, 'normal')
+  ylabel(axCepg,'Quefrency [samples]')
+  xlabel(axCepg,'frame #')
+  title('Cepstrogram (real)')
 end
 
 if plotEn(5)

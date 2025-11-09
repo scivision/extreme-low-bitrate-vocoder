@@ -21,7 +21,7 @@ transmit(plotFile, paramFile, pm, lpcFile, exciteFile, doPlot)
 save(outputFile, 'xSynth', 'xSynthW', 'Excite', 'TractPoles', 'TractG')
 
 if doPlot
-  MyPlot(plotFile,xSynth,xSynthW,Excite,TractPoles,TractG)
+  MyPlot(plotFile,xSynth,xSynthW,Excite)
 end
 
 if playSound
